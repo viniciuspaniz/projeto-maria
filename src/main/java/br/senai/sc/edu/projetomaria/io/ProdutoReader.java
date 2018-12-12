@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,17 +33,16 @@ public class ProdutoReader {
 
 		List<Produto> produtos = new ArrayList<>();
 		List<String> erros = new ArrayList<>();
-		try (Reader br = Files.newBufferedReader(caminho);
-				) {
+		try (Reader br = Files.newBufferedReader(caminho);) {
 			Iterable<CSVRecord> records = CSVFormat.DEFAULT.withHeader(mapeamentoColunasArquivo).withDelimiter(Config.CSV_DELIMITADOR).withFirstRecordAsHeader().parse(br);
 			for (CSVRecord ler : records) {
 				String idFamiliaComercial = ler.get(0);
 				String nomeProduto = ler.get(1);
 				String sku = ler.get(2);
 
-				boolean idFamiliaComercialR = idFamiliaComercial.matches("^[0-9]{1,20}$");
+				boolean idFamiliaComercialR = idFamiliaComercial.matches("^[0-9]{1,8}$");
 				boolean nomeProdutoR = nomeProduto.matches("^.{1,255}$");
-				boolean skuR = sku.matches("^[0-9]{1,20}$");
+				boolean skuR = sku.matches("^[0-9]{1,7}$");
 
 				if (skuR && nomeProdutoR && idFamiliaComercialR) {	
 					novoProduto = new Produto();
